@@ -1,7 +1,133 @@
-@(message: String)
+@(metas: List[Tarefa])
 
-@main("Welcome to Play") {
+<html lang="pt-BR">
+    <head>
+        <title>Agenda de metas</title>
+        <meta charset="UTF-8">
+        <meta name=description content="">
+        <meta name=viewport content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <!-- Bootstrap CSS -->
+        <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    </head>
+    <body>
+        <div class="container-fluid">
 
-    @play20.welcome(message, style = "Java")
+            <div class="col-xg-9" style="text-align: center;">
+                <div class="alert alert-info" role="alert" style="font-size: 25pt;">Minhas metas</div>
+                <br/>
+                <br/>
+            </div>
 
-}
+            <div class="col-sm-5">
+                <h2>Adicionar uma meta</h2>
+
+                <form action="@routes.Application.newMeta()" method="post">
+                    <label for="nome"> Nome: </label>
+                    <input type="text" name="nome" id="inputNome" class="form-control col-sm-4"required="required">
+                    <br/>
+                    <label for="nome"> Prioridade: </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="prioridade" id="inputPrioridade" value="Baixa"> Baixa
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="prioridade" id="inputPrioridade" value="Média"> Média
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="prioridade" id="inputPrioridade" value="Alta"> Alta
+                    </label><br/>
+                    @*<input type="text" name="prioridade" id="inputPrioridade" class="form-control"required="required">*@
+                    <label for="nome"> Semana: </label>
+                    <label class="label label-defalt">ta</label>
+                    <select class="input-medium" name="semana" id="inputSemana">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                        <option>6</option>
+                    </select>
+                    @*<input type="text" name="semana" id="inputSemana" class="form-control"required="required">*@
+                    <br/>
+                    <input type="submit" class="btn btn-primary" value="Create">
+                </form>
+            </div>
+            <div class="col-sm-6">
+                <h2 class="text-center">Meta(s)</h2>
+                <h3>Quantidade de metas por semana</h3>
+                <div style="font-size: 13pt">
+                <label class="label label-primary">Metas da semana 1: @(Application.getNumberOfTasksByWeek(1)-Application.getNumberOfTasksDonesByWeek(1))</label> <label class="label label-success"> Alcançadas: @Application.getNumberOfTasksDonesByWeek(1)</label><br/><br/>
+                <label class="label label-primary">Metas da semana 2: @(Application.getNumberOfTasksByWeek(2)-Application.getNumberOfTasksDonesByWeek(2))</label> <label class="label label-success"> Alcançadas: @Application.getNumberOfTasksDonesByWeek(2)</label><br/><br/>
+                <label class="label label-primary">Metas da semana 3: @(Application.getNumberOfTasksByWeek(3)-Application.getNumberOfTasksDonesByWeek(3))</label> <label class="label label-success"> Alcançadas: @Application.getNumberOfTasksDonesByWeek(3)</label><br/><br/>
+                <label class="label label-primary">Metas da semana 4: @(Application.getNumberOfTasksByWeek(4)-Application.getNumberOfTasksDonesByWeek(4))</label> <label class="label label-success"> Alcançadas: @Application.getNumberOfTasksDonesByWeek(4)</label><br/><br/>
+                <label class="label label-primary">Metas da semana 5: @(Application.getNumberOfTasksByWeek(5)-Application.getNumberOfTasksDonesByWeek(5))</label> <label class="label label-success"> Alcançadas: @Application.getNumberOfTasksDonesByWeek(5)</label><br/><br/>
+                <label class="label label-primary">Metas da semana 6: @(Application.getNumberOfTasksByWeek(6)-Application.getNumberOfTasksDonesByWeek(6))</label> <label class="label label-success"> Alcançadas: @Application.getNumberOfTasksDonesByWeek(6)</label><br/><br/>
+                </div>
+                    <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Nome </th>
+                                <th>Prioridade </th>
+                                <th>Semana</th>
+                                <th>Ações </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @for(meta <- metas) {
+                            @if(meta.getDone()){
+                                <tr class="success">
+                                    <td><s>@meta.getNome()</s></td>
+                                    <td><s>@meta.getPrioridade()</s></td>
+                                    <td><s>@meta.getSemana()</s></td>
+                                    <td></td>
+                                    <td>
+                                        <form action="@routes.Application.deleteMeta(meta.getId())" method="post">
+                                            <input type="submit" class="btn btn-danger" value="Apagar">
+                                        </form>
+                                    </td>
+
+                                </tr>
+                            }else{
+                            <tr>
+                                <td>@meta.getNome()</td>
+                                <td>@meta.getPrioridade()</td>
+                                <td>@meta.getSemana()</td>
+                                <td>
+                                    <form action="@routes.Application.changeStatus(meta.getId())" method="post">
+                                        <input type="submit" class="btn btn-success" value="Alcançada">
+                                    </form>
+                                </td>
+                                <td>
+                                    <form action="@routes.Application.deleteMeta(meta.getId())" method="post">
+                                        <input type="submit" class="btn btn-danger" value="Apagar">
+                                    </form>
+                                </td>
+                            </tr>
+                            }
+                        }
+                        </tbody>
+                    </table>
+                    <div id="legenda">
+                        <label class="label label-success">Metas alcançadas</label>
+                        <label style="font-size: 8pt; font-weight: bolder;">Metas pendentes</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+            <!-- jQuery -->
+        <script>
+            function getNumberOfTasksByWeek(tarefas ,week){
+                for(Tarefa tarefa: tarefas){
+
+            }
+            }
+        </script>
+        <script src="http://code.jquery.com/jquery.js"></script>
+            <!-- Bootstrap JavaScript -->
+        <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+    </body>
+</html>
+
+
