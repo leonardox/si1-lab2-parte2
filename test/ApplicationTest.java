@@ -1,23 +1,15 @@
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import com.fasterxml.jackson.databind.JsonNode;
+import models.DAO.GenericDAO;
+import models.Tarefa;
 import org.junit.*;
-
-import play.mvc.*;
+import java.util.Collections;
+import play.db.jpa.JPA;
+import play.db.jpa.JPAPlugin;
 import play.test.*;
-import play.data.DynamicForm;
-import play.data.validation.ValidationError;
-import play.data.validation.Constraints.RequiredValidator;
-import play.i18n.Lang;
-import play.libs.F;
-import play.libs.F.*;
-import play.twirl.api.Content;
-
-import static play.test.Helpers.*;
+import javax.persistence.EntityManager;
 import static org.fest.assertions.Assertions.*;
+import scala.Option;
 
 
 /**
@@ -29,17 +21,9 @@ import static org.fest.assertions.Assertions.*;
 public class ApplicationTest {
 
     @Test
-    public void simpleCheck() {
-        int a = 1 + 1;
-        assertThat(a).isEqualTo(2);
-    }
-
-    @Test
     public void renderTemplate() {
-        Content html = views.html.index.render("Your new application is ready.");
-        assertThat(contentType(html)).isEqualTo("text/html");
-        assertThat(contentAsString(html)).contains("Your new application is ready.");
+        // Content html = views.html.index.render("WeekGoals");
+        //assertThat(contentType(html)).isEqualTo("text/html");
+        // assertThat(contentAsString(html)).contains("WeekGoals");
     }
-
-
 }
